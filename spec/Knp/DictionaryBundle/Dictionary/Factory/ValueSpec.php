@@ -6,7 +6,7 @@ namespace spec\Knp\DictionaryBundle\Dictionary\Factory;
 
 use InvalidArgumentException;
 use Knp\DictionaryBundle\Dictionary\Factory;
-use Knp\DictionaryBundle\Dictionary\ValueTransformer;
+use Knp\DictionaryBundle\ValueTransformer;
 use PhpSpec\ObjectBehavior;
 
 class ValueSpec extends ObjectBehavior
