@@ -49,4 +49,9 @@ class SimpleSpec extends ObjectBehavior
     {
         $this->getName()->shouldReturn('foo');
     }
+
+    function it_is_countable()
+    {
+        $this->count()->shouldReturn(3);
+    }
 }

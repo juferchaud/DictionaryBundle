@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace spec\Knp\DictionaryBundle\Dictionary;
 
+use ArrayIterator;
 use Assert\Assert;
+use IteratorAggregate;
 use Knp\DictionaryBundle\Dictionary;
 use PhpSpec\ObjectBehavior;
 
@@ -73,8 +75,55 @@ class CombinedSpec extends ObjectBehavior
         ]);
     }
 
+    function it_can_iterate_over_dictionaries($dictionary1, $dictionary2, $dictionary3)
+    {
+        $dictionary1->getIterator()->willReturn(new ArrayIterator([
+            'foo1' => 'foo10',
+            'foo2' => 'foo20',
+        ]));
+
+        $dictionary2->getIterator()->willReturn(new ArrayIterator([
+            'bar1' => 'bar10',
+            'bar2' => 'bar20',
+        ]));
+
+        $dictionary3->getIterator()->willReturn(new ArrayIterator([
+            'foo2' => 'baz20',
+            'bar2' => 'baz20',
+        ]));
+
+        $this->shouldIterateOver([
+            'foo1' => 'foo10',
+            'foo2' => 'baz20',
+            'bar1' => 'bar10',
+            'bar2' => 'baz20',
+        ]);
+    }
+
     function its_getname_should_return_dictionary_name()
     {
         $this->getName()->shouldReturn('combined_dictionary');
+    }
+
+    function it_sums_the_count_of_elements($dictionary1, $dictionary2, $dictionary3)
+    {
+        $dictionary1->count()->willReturn(1);
+
+        $dictionary2->count()->willReturn(2);
+
+        $dictionary3->count()->willReturn(4);
+
+        $this->count()->shouldReturn(7);
+    }
+
+    public function getMatchers(): array
+    {
+        return [
+            'iterateOver' => function (IteratorAggregate $iterator, array $array): bool {
+                Assert::that(iterator_to_array($iterator))->eq($array);
+
+                return true;
+            },
+        ];
     }
 }

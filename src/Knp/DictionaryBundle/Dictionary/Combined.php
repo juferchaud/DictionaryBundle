@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Knp\DictionaryBundle\Dictionary;
 
-use AppendIterator;
 use InvalidArgumentException;
+use Iterator;
 use Knp\DictionaryBundle\Dictionary;
 
 class Combined implements Dictionary
@@ -61,7 +61,7 @@ class Combined implements Dictionary
     /**
      * {@inheritdoc}
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return \in_array($offset, $this->getKeys());
     }
@@ -115,14 +115,17 @@ class Combined implements Dictionary
     /**
      * {@inheritdoc}
      */
-    public function getIterator()
+    public function getIterator(): Iterator
     {
-        $iterator = new AppendIterator();
-
         foreach ($this->dictionaries as $dictionary) {
-            $iterator->append($dictionary->getIterator());
+            foreach ($dictionary as $key => $value) {
+                yield $key => $value;
+            }
         }
+    }
 
-        return $iterator;
+    public function count(): int
+    {
+        return (int) (array_sum(array_map('count', $this->dictionaries)));
     }
 }

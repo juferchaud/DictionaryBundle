@@ -84,4 +84,9 @@ class TraceableSpec extends ObjectBehavior
 
         Assert::that(iterator_to_array($this->getIterator()->getWrappedObject()))->eq(['foo' => 'bar', 'baz' => null]);
     }
+
+    function it_delegates_the_count_to_the_other_dictionary()
+    {
+        $this->count()->shouldReturn(2);
+    }
 }
